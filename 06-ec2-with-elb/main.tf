@@ -1,9 +1,3 @@
-variable "aws_key_pair" {
-  #paso 5
-  default = "C:\\Users\\alfre\\Downloads\\default-ec2.pem"
-}
-
-
 provider "aws" {
   region  = "us-east-1"
   version = "~> 2.58"
@@ -12,22 +6,6 @@ provider "aws" {
 #7      esto es una forma de no hardcodear el id de la vpc. Solamente es una referencia. No se crea ni se destruye en realidad.
 #referencciará a la vpc por defecto de la region que estemos usando.
 resource "aws_default_vpc" "default" {
-}
-
-#8      ahora intentaremos que no esté hardcoded el subnet
-data "aws_subnet_ids" "default_subnets" {
-  #lo anterior es la vpc sobre la qu elo queremos hacer
-  vpc_id = aws_default_vpc.default.id
-}
-#9      ahora vamos a evitar el hardcoded el AMI. aws-linux-2-latest será un enlace dinámico a la ami que queramos, pero si se actualiza por cualquier cuestion, este enlace seguirá funcionando
-data "aws_ami" "aws-linux-2-latest" {
-  most_recent = true
-  owners      = ["amazon"]
-  #con lo anterior (y si el data fuera "aws_amiS"), se obtendrá una lista de ids de amis, ahora hay que filtrarlo para obtener exáctamente la que queremos
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*"]
-  }
 }
 
 #1      queremos un servidor que sea accesible en el puerto 80 (web) y 22(ssh), desde cualquier lugar.
